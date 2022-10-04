@@ -1,0 +1,16 @@
+<div class="grid grid-nogutter text-center">
+    <div class="col-12">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </div>
+    <div class="col-12">
+        <h2>Website Under Maintenance</h2>
+        <h2>Maintenance Started at: {{maintenanceStartTime | date: 'medium'}}</h2>
+        <h2>Maintenance Expected to Complete at: {{maintenanceEndTime | date: 'medium'}}</h2>
+        <h2>{{currentTime | date:'medium'}}</h2>
+    </div>
+</div>
+<div class="grid grid-nogutter">
+    <div class="col-12" *ngFor="let maintenance of maintenances">
+        {{maintenance | json}}
+    </div>
+</div>

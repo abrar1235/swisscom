@@ -1,0 +1,15 @@
+:host ::ng-deep {
+    .p-menubar {
+        border-radius: 0;
+        position: relative;
+        bottom: 8px;
+        margin-left: -8px;
+        margin-right: -8px;
+        padding: 8px 0;
+    }
+
+    .pi-spin {
+        font-size: 8rem !important;
+        color: var(--yellow-500);
+    }
+}

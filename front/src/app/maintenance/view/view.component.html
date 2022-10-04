@@ -1,0 +1,32 @@
+<div class="grid grid-nogutter">
+    <div class="col-12">
+        <!-- <button pButton pRipple label="Load More" (click)="fetchMore()" [disabled]="!hasMore"></button> -->
+    </div>
+</div>
+<div class="grid grid-nogutter">
+    <div class="col-12">
+        <p-table [value]="maintenance" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Description</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-maintenance>
+                <tr>
+                    <td>{{maintenance.description}}</td>
+                    <td>{{maintenance.startTime | date: 'medium'}}</td>
+                    <td>{{maintenance.endTime | date: 'medium'}}</td>
+                    <!-- <td>
+                        <button pButton pRipple label="{{user.status === 'ACTIVE' ? 'Lock' : 'Unlock'}}"
+                            class="p-button-outlined p-button-danger" (click)="update(user)"
+                            [disabled]="user.updating"></button>
+                        <button pButton pRipple label="Delete" class="p-button-outlined p-button-danger"
+                            (click)="delete(user)" [disabled]="user.deleting"></button>
+                    </td> -->
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="grid grid-nogutter text-center">
+    <div class="col-12">
+        <h2>Please Login to Continue</h2>
+    </div>
+    <form [formGroup]="loginForm">
+        <div class="col-12">
+            <h3>Email:</h3>
+            <input type="email" pInputText placeholder="Email" formControlName="email">
+        </div>
+        <div class="col-12">
+            <h3>Password:</h3>
+            <input type="password" pInputText placeholder="Password" formControlName="password">
+        </div>
+        <div class="col-12 text-center">
+            <button pButton pRipple label="Login" [disabled]="loginForm.invalid || inProgress" (click)="login()">
+                <p-progressSpinner styleClass="progress-spinner" animationDuration="1s" strokeWidth="8" *ngIf="inProgress"></p-progressSpinner>
+            </button>
+        </div>
+        <div class="col-12 text-center">
+            <h4 *ngIf="error != ''" style="color: red;">{{error}}</h4>
+        </div>
+    </form>
+</div>
