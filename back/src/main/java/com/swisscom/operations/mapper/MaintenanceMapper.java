@@ -16,7 +16,7 @@ import static com.swisscom.operations.constant.MaintenanceModelGen.*;
 @Slf4j
 public class MaintenanceMapper {
 
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Maintenance parseFromDTO(MaintenanceDTO maintenance) {
         return Maintenance.builder()
@@ -89,7 +89,7 @@ public class MaintenanceMapper {
             return formatter.parse(date);
         } catch (Exception e) {
             log.error("an error occurred while parsing date", e);
-            throw new IllegalArgumentException("Invalid Date Format: " + date);
+            throw new IllegalArgumentException(String.format("Invalid Date Format: %s, expected Format: %s" , date, formatter.toPattern()));
         }
     }
 
@@ -98,7 +98,7 @@ public class MaintenanceMapper {
             return formatter.format(date);
         } catch (Exception e) {
             log.error("an error occurred while parsing date", e);
-            throw new IllegalArgumentException("Invalid Date Format: " + date);
+            throw new IllegalArgumentException(String.format("Invalid Date Format: %s, expected Format: %s" , date, formatter.toPattern()));
         }
     }
 

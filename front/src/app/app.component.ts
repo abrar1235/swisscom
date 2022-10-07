@@ -36,10 +36,6 @@ export class AppComponent implements OnInit {
         routerLink: '/user/manage'
       },
       {
-        label: 'Manage Maintenance',
-        routerLink: '/maintenance/manage'
-      },
-      {
         label: 'Logout',
         command: () => this.logout()
       }

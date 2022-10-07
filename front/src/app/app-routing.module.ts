@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 const routes: Route[] = [
     {
         path: 'user',
@@ -18,6 +19,10 @@ const routes: Route[] = [
         path: '',
         pathMatch: 'full',
         redirectTo: ''
+    },
+    {
+        path:'**',
+        component: NotFoundComponent
     }
 ];
 

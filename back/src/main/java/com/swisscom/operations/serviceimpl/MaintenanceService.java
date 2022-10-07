@@ -9,6 +9,7 @@ import com.swisscom.operations.service.IMaintenanceService;
 import com.swisscom.operations.util.AppUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,6 @@ import javax.persistence.Tuple;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static com.swisscom.operations.constant.MaintenanceModelGen.*;
 import static com.swisscom.operations.mapper.MaintenanceMapper.*;
@@ -31,6 +31,7 @@ public class MaintenanceService implements IMaintenanceService {
     private final AppUtil appUtil;
     private final IUserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public Result<Maintenance, Failure> addMaintenance(Maintenance maintenance) {
@@ -48,23 +49,10 @@ public class MaintenanceService implements IMaintenanceService {
             toBeSaved = maintenanceRepository.addMaintenance(toBeSaved);
             log.debug("maintenance scheduled added {}", toBeSaved.getId());
             Maintenance added = parseFromDTO(toBeSaved);
-            messagingTemplate.convertAndSend("/topic/maintenance", added);
+            publishMessage(added);
             return Result.success(added);
         } catch (Exception e) {
             log.error("an error occurred while adding maintenance", e);
-            return Result.failure(new Failure(e.getMessage()));
-        }
-    }
-
-    @Override
-    public Result<UpdateResponse, Failure> updateMaintenance(Map<String, Object> maintenance) {
-        try {
-            log.debug("updating maintenance schedule {}", maintenance.get(ID));
-            int updates = maintenanceRepository.updateMaintenance(maintenance);
-            log.debug("Maintenance Scheduled updated {}, total updates {}", updates > 0, updates);
-            return Result.success(new UpdateResponse(updates));
-        } catch (Exception e) {
-            log.error("an error occurred while updating maintenance schedule", e);
             return Result.failure(new Failure(e.getMessage()));
         }
     }
@@ -75,6 +63,7 @@ public class MaintenanceService implements IMaintenanceService {
             log.debug("deleting scheduled maintenance with id {}", maintenanceId);
             int deletes = maintenanceRepository.removeMaintenance(maintenanceId);
             log.debug("Scheduled deleted {}, total deletes {}", deletes > 0, deletes);
+            messagingTemplate.convertAndSend("/topic/maintenance/remove", maintenanceId);
             return Result.success(new DeleteResponse(deletes));
         } catch (Exception e) {
             log.error("an error occurred while deleting maintenance schedule", e);
@@ -106,5 +95,16 @@ public class MaintenanceService implements IMaintenanceService {
             log.error("an error occurred while fetching maintenance scheduled", e);
             return Result.failure(new Failure(e.getMessage()));
         }
+    }
+
+    private void publishMessage(Maintenance added) {
+        new Thread(() -> {
+            try {
+                messagingTemplate.convertAndSend("/topic/maintenance/add", added);
+                kafkaTemplate.send("test", added.toString());
+            } catch (Exception e) {
+                log.error("error when publish", e);
+            }
+        }).start();
     }
 }

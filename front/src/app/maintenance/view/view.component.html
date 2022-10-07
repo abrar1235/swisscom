@@ -1,6 +1,9 @@
+<h3 routerLink="/user/login" *ngIf="!isAdmin">Login to Manage Maitenance, Click here</h3>
 <div class="grid grid-nogutter">
     <div class="col-12">
-        <!-- <button pButton pRipple label="Load More" (click)="fetchMore()" [disabled]="!hasMore"></button> -->
+        <button pButton pRipple label="Schedule Maintenance" *ngIf="isAdmin"
+            (click)="scheduleMaintenancePopUp = true"></button>
+        <button pButton pRipple label="Load More" (click)="fetchMore()" [disabled]="!hasMore"></button>
     </div>
 </div>
 <div class="grid grid-nogutter">
@@ -11,6 +14,9 @@
                     <th>Description</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th *ngIf="isAdmin">
+                        Action
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-maintenance>
@@ -18,15 +24,41 @@
                     <td>{{maintenance.description}}</td>
                     <td>{{maintenance.startTime | date: 'medium'}}</td>
                     <td>{{maintenance.endTime | date: 'medium'}}</td>
-                    <!-- <td>
-                        <button pButton pRipple label="{{user.status === 'ACTIVE' ? 'Lock' : 'Unlock'}}"
-                            class="p-button-outlined p-button-danger" (click)="update(user)"
-                            [disabled]="user.updating"></button>
+                    <td *ngIf="isAdmin">
                         <button pButton pRipple label="Delete" class="p-button-outlined p-button-danger"
-                            (click)="delete(user)" [disabled]="user.deleting"></button>
-                    </td> -->
+                            (click)="delete(maintenance)" [disabled]="maintenance.deleting"></button>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
+<p-dialog *ngIf="isAdmin" header="Add User" [(visible)]="scheduleMaintenancePopUp" [modal]="true"
+    [style]="{width: '27vw'}" [draggable]="false" [resizable]="false" [closeIcon]="'false'">
+    <div class="grid grid-nogutter">
+        <form [formGroup]="maintenanceForm">
+            <div class="col-12">
+                <h3>Description: </h3>
+                <input type="text" pInputText placeholder="Description" formControlName="description">
+            </div>
+            <div class="col-12">
+                <h3>Start Time: </h3>
+                <p-calendar placeholder="Start Time" [minDate]="minDate" formControlName="startTime" [showTime]="true"
+                    [showSeconds]="true" [touchUI]="true" [hourFormat]="'24'" inputId="startTime"></p-calendar>
+            </div>
+
+            <div class="col-12">
+                <h3>End Time: </h3>
+                <p-calendar placeholder="End Time" [minDate]="minDate" formControlName="endTime" [showTime]="true"
+                    [showSeconds]="true" [touchUI]="true" [hourFormat]="'24'" inputId="endTime"></p-calendar>
+            </div>
+            <div class="col-12">
+                <button pButton pRipple label="Add" styleClass="p-button-text"
+                    [disabled]="maintenanceForm.invalid || inProgress" (click)="scheduleMaintenance()"></button>
+                <p-button icon="pi pi-check" (click)="scheduleMaintenancePopUp=false" label="Close"
+                    styleClass="p-button-text" [disabled]="inProgress">
+                </p-button>
+            </div>
+        </form>
+    </div>
+</p-dialog>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 
@@ -15,11 +16,12 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private title: Title
   ) { }
 
   ngOnInit(): void {
-
+    this.title.setTitle('Login');
   }
 
   loginForm = this.formBuilder.group({
@@ -38,7 +40,7 @@ export class LoginComponent implements OnInit {
       next: response => {
         if (response.status === 'success') {
           let user = response.success;
-          localStorage.setItem('user', user);
+          localStorage.setItem('user', JSON.stringify(user));
           localStorage.setItem('token', user.token);
           let nextUrl = localStorage.getItem('nextUrl');
           this.router.navigate([nextUrl ? nextUrl : '/user/manage']);

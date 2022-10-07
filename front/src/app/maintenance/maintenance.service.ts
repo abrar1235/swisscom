@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { throwError } from "rxjs";
+import { catchError, Observable, retry, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 
 @Injectable()
@@ -12,6 +12,29 @@ export class MaintenanceService {
         private httpClient: HttpClient
     ) { }
 
+    getUpcomingMaintenance(index: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/api/v1/maintenance/getMaintenanceList?index=${index}`)
+            .pipe(
+                retry(3),
+                catchError(this.handleError)
+            );
+    }
+
+    addMaintenance(maintenance: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/api/v1/maintenance/addMaintenance`, maintenance)
+            .pipe(
+                retry(3),
+                catchError(this.handleError)
+            )
+    }
+
+    deleteMaintenance(maintenanceId: any): Observable<any> {
+        return this.httpClient.delete<any>(`${this.endPoint}/api/v1/maintenance/deleteMaintenance?maintenanceId=${maintenanceId}`)
+            .pipe(
+                retry(3),
+                catchError(this.handleError)
+            );
+    }
 
     handleError(error: HttpErrorResponse) {
         if (error.status === 0) {

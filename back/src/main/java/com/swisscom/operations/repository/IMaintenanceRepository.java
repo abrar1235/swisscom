@@ -10,9 +10,8 @@ import java.util.Map;
 public interface IMaintenanceRepository {
 
     MaintenanceDTO addMaintenance(MaintenanceDTO maintenance);
-    int updateMaintenance(Map<String, Object> maintenance);
     int removeMaintenance(String maintenanceId);
-    List<Tuple> getMaintenanceList(int index, List<String> columns);
+    List<Tuple> getMaintenanceList(int index, List<String> columns) throws ParseException;
     Tuple getMaintenanceById(String maintenanceId,List<String> columns);
     List<Tuple> maintenanceTimes(String startTime, String endTime) throws ParseException;
 }

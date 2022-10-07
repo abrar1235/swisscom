@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/maintenance")
@@ -29,11 +28,6 @@ public class MaintenanceController {
     @PostMapping("/addMaintenance")
     public Result<Maintenance, Failure> addMaintenance(@RequestBody @Valid Maintenance maintenance){
         return maintenanceService.addMaintenance(maintenance);
-    }
-
-    @PutMapping("/updateMaintenance")
-    public Result<UpdateResponse, Failure> updateMaintenance(@RequestBody Map<String, Object> updates){
-        return maintenanceService.updateMaintenance(updates);
     }
 
     @DeleteMapping("/deleteMaintenance")

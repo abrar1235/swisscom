@@ -27,8 +27,6 @@ public class Maintenance {
     @NotEmpty(message = MESSAGE)
     private String endTime;
 
-    @NotNull(message = MESSAGE)
-    @NotEmpty(message = MESSAGE)
     private String timeZone;
 
     @NotNull(message = MESSAGE)

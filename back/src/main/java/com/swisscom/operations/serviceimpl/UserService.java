@@ -64,7 +64,7 @@ public class UserService implements IUserService {
         try {
             log.debug("Updating user with id {}", update.get(ID));
             update.computeIfPresent(PASSWORD, (k, v) -> {
-                throw new IllegalStateException("Invalid Key Passed => { Password }");
+                throw new IllegalArgumentException("Invalid Key Passed => { Password }");
             });
             int updates = userRepository.updateUser(update);
             log.debug("User Updated {}, total updates {}", updates > 0, updates);

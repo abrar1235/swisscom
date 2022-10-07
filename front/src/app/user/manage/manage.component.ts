@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -16,12 +17,14 @@ export class ManageComponent implements OnInit {
   user!: any;
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private title: Title
   ) { }
 
   ngOnInit(): void {
     this.fetchUsers();
-    this.user = JSON.parse(localStorage.getItem('user') as any)
+    this.user = JSON.parse(localStorage.getItem('user') as any);
+    this.title.setTitle('Manage Users');
   }
 
   userForm = this.formBuilder.group({

@@ -12,7 +12,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
-import { HttpTokenInterceptorProvider } from '../http-interceptor';
+import { HttpTokenInterceptorProvider } from '../http-interceptor-provider';
 
 @NgModule({
   declarations: [

@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static com.swisscom.operations.constant.MaintenanceModelGen.*;
 
@@ -25,7 +24,7 @@ import static com.swisscom.operations.constant.MaintenanceModelGen.*;
 @RequiredArgsConstructor
 @Transactional
 public class MaintenanceRepository implements IMaintenanceRepository {
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final EntityManager entityManager;
     private final AppUtil appUtil;
 
@@ -36,21 +35,6 @@ public class MaintenanceRepository implements IMaintenanceRepository {
         entityManager.persist(maintenance);
         log.debug("Maintenance Added with id {}", maintenance.getId());
         return maintenance;
-    }
-
-    @Override
-    public int updateMaintenance(Map<String, Object> maintenance) {
-        log.debug("Updating Maintenance Schedule with id {}", maintenance.get(ID));
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaUpdate<MaintenanceDTO> update = builder.createCriteriaUpdate(MaintenanceDTO.class);
-        Root<MaintenanceDTO> root = update.from(MaintenanceDTO.class);
-        maintenance.entrySet().stream()
-                .filter(entry -> !entry.getKey().equalsIgnoreCase(ID))
-                .forEach(entry -> update.set(root.get(entry.getKey()), entry.getValue()));
-        update.where(builder.equal(root.get(ID), maintenance.get(ID)));
-        int updates = entityManager.createQuery(update).executeUpdate();
-        log.debug("Resource Updated, total Updates {}", updates);
-        return updates;
     }
 
     @Override
@@ -66,13 +50,14 @@ public class MaintenanceRepository implements IMaintenanceRepository {
     }
 
     @Override
-    public List<Tuple> getMaintenanceList(int index, List<String> columns) {
+    public List<Tuple> getMaintenanceList(int index, List<String> columns) throws ParseException {
         log.debug("Fetching Maintenance List start index {}", index);
+        Date today = new Date();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = builder.createTupleQuery();
         Root<MaintenanceDTO> root = query.from(MaintenanceDTO.class);
         query.multiselect(appUtil.parseColumns(columns, root))
-                .where(builder.greaterThanOrEqualTo(root.get(START_TIME), new Date()))
+                .where(builder.greaterThanOrEqualTo(root.get(START_TIME), simpleDateFormat.parse(simpleDateFormat.format(today))))
                 .orderBy(builder.desc(root.get(START_TIME)));
         return entityManager.createQuery(query).setFirstResult(index).setMaxResults(20).getResultList();
     }

@@ -10,11 +10,13 @@ import { AppService } from './app.service';
 import { MenubarModule } from 'primeng/menubar';
 import { WebSocketService } from './websocket/websocket.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
