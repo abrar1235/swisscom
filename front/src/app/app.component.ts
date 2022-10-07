@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       }
     ];
 
-    this.websocketService.connect('', true).subscribe(x => console.log(x));
+    this.websocketService.connect('').subscribe(x => console.log(x));
   }
 
   logout() {
